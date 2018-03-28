@@ -215,10 +215,12 @@ MuContainer* mu_container_sort (MuContainer *c, MuMsgFieldId mfid,
  * @param root_set the containers @param matchnum the number of
  * matches in the list (this is needed to determine the shortest
  * possible collation keys ('threadpaths') for the messages
+ * @param skip_dups Exclude duplicates from threading info if TRUE
  *
  * @return a hash; free with g_hash_table_destroy
  */
 GHashTable* mu_container_thread_info_hash_new (MuContainer *root_set,
-					       size_t matchnum);
+					       size_t matchnum,
+					       gboolean skip_dups);
 
 #endif /*__MU_CONTAINER_H__*/

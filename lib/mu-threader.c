@@ -59,7 +59,7 @@ GHashTable* create_doc_id_thread_path_hash (MuContainer *root,
  * http://www.jwz.org/doc/threading.html */
 GHashTable*
 mu_threader_calculate (MuMsgIter *iter, size_t matchnum,
-		       MuMsgFieldId sortfield, gboolean descending)
+		       MuMsgFieldId sortfield, gboolean descending, gboolean skip_dups)
 {
 	GHashTable *id_table, *thread_ids;
 	MuContainer *root_set;
@@ -95,7 +95,8 @@ mu_threader_calculate (MuMsgIter *iter, size_t matchnum,
 
 	/* finally, deliver the docid => thread-path hash */
 	thread_ids = mu_container_thread_info_hash_new (root_set,
-							matchnum);
+							matchnum,
+							skip_dups);
 
 	g_hash_table_destroy (id_table); /* step 3*/
 

@@ -44,11 +44,12 @@ G_BEGIN_DECLS
  * @param sortfield the field to sort results by, or
  * MU_MSG_FIELD_ID_NONE if no sorting should be performed
  * @param revert if TRUE, if revert the sorting order
+ * @param skip_dups skip duplicates from threading info if TRUE
  *
  * @return a hashtable; free with g_hash_table_destroy when done with it
  */
 GHashTable *mu_threader_calculate (MuMsgIter *iter, size_t matches,
-				   MuMsgFieldId sortfield, gboolean revert);
+				   MuMsgFieldId sortfield, gboolean revert, gboolean skip_dups);
 
 
 G_END_DECLS

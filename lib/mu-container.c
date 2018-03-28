@@ -602,13 +602,14 @@ thread_info_destroy (MuMsgIterThreadInfo *ti)
 struct _ThreadInfo {
 	GHashTable *hash;
 	const char *format;
+	gboolean skip_dups;
 };
 typedef struct _ThreadInfo ThreadInfo;
 
 
 static void
 add_to_thread_info_hash (GHashTable *thread_info_hash, MuContainer *c,
-			 char *threadpath)
+			 char *threadpath, gboolean skip_dups)
 {
 	gboolean is_root, first_child, empty_parent, is_dup, has_child;
 
@@ -618,7 +619,7 @@ add_to_thread_info_hash (GHashTable *thread_info_hash, MuContainer *c,
 	first_child  = is_root ? FALSE : (c->parent->child == c);
 	empty_parent = is_root ? FALSE : (!c->parent->msg);
 	is_dup	     = c->flags & MU_CONTAINER_FLAG_DUP;
-	has_child    = c->child ? TRUE : FALSE;
+	has_child    = c->child && (skip_dups ? strcmp(mu_msg_get_msgid(c->child->msg), mu_msg_get_msgid(c->msg)) != 0 : TRUE);
 
 	g_hash_table_insert (thread_info_hash,
 			     GUINT_TO_POINTER(c->docid),
@@ -652,14 +653,14 @@ add_thread_info (MuContainer *c, ThreadInfo *ti, Path *path)
 	gchar *pathstr;
 
 	pathstr = path_to_string (path, ti->format);
-	add_to_thread_info_hash (ti->hash, c, pathstr);
+	add_to_thread_info_hash (ti->hash, c, pathstr, ti->skip_dups);
 
 	return TRUE;
 }
 
 
 GHashTable*
-mu_container_thread_info_hash_new (MuContainer *root_set, size_t matchnum)
+mu_container_thread_info_hash_new (MuContainer *root_set, size_t matchnum, gboolean skip_dups)
 {
 	ThreadInfo ti;
 
@@ -672,6 +673,7 @@ mu_container_thread_info_hash_new (MuContainer *root_set, size_t matchnum)
 					 (GDestroyNotify)thread_info_destroy);
 
 	ti.format     = thread_segment_format_string (matchnum);
+	ti.skip_dups  = skip_dups;
 
 	mu_container_path_foreach (root_set,
 				(MuContainerPathForeachFunc)add_thread_info,

@@ -85,7 +85,8 @@ public:
 			// need threadinfo for *all*
 			_skip_dups = false;
 			_thread_hash = mu_threader_calculate
-				(this, _matches.size(), sortfield, descending);
+				(this, _matches.size(), sortfield, descending,
+				 flags & MU_MSG_ITER_FLAG_SKIP_DUPS);
 			_skip_dups = (flags & MU_MSG_ITER_FLAG_SKIP_DUPS);
 			ThreadKeyMaker	keymaker(_thread_hash);
 			enq.set_sort_by_key (&keymaker, false);
