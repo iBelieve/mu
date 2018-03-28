@@ -420,14 +420,14 @@ into a string."
 	(make-string (* (if (plist-get thread :empty-parent) 0 1)
 		 (plist-get thread :level)) ?\s)
 	(cond
+	  ((plist-get thread :duplicate)
+	    (funcall get-prefix mu4e-headers-duplicate-prefix))
 	  ((plist-get thread :has-child)
 	    (funcall get-prefix mu4e-headers-has-child-prefix))
 	  ((plist-get thread :empty-parent)
 	    (funcall get-prefix mu4e-headers-empty-parent-prefix))
 	  ((plist-get thread :first-child)
 	    (funcall get-prefix mu4e-headers-first-child-prefix))
-	  ((plist-get thread :duplicate)
-	    (funcall get-prefix mu4e-headers-duplicate-prefix))
 	  (t
 	    (funcall get-prefix mu4e-headers-default-prefix)))
 	" "))))
